@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YNAB — Amazon Enrichment Feature Mockup</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fff;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 224px;
+      background: #1a2340;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 14px 14px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .ynab-logo {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-user-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sidebar-user-info .budget-name {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sidebar-user-info .budget-name .arrow {
+      opacity: 0.5;
+      font-size: 10px;
+    }
+
+    .sidebar-user-info .email {
+      font-size: 10px;
+      opacity: 0.5;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 10px 8px;
+    }
+
+    .sidebar-nav li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .sidebar-nav li .nav-icon {
+      width: 16px;
+      text-align: center;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .sidebar-nav li.active {
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .sidebar-accounts {
+      padding: 4px 8px 8px;
+    }
+
+    .accounts-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.4);
+      padding: 8px 10px 4px;
+    }
+
+    .account-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .account-row:hover { background: rgba(255,255,255,0.06); }
+
+    .account-row .acc-name { display: flex; align-items: center; gap: 5px; }
+
+    .account-row .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      flex-shrink: 0;
+    }
+
+    .account-row .check { color: #4caf88; font-size: 11px; }
+
+    .accounts-section-label.closed {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .sidebar-buttons {
+      padding: 8px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sidebar-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.75);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .sidebar-btn:hover { background: rgba(255,255,255,0.07); }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 10px 14px 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .refer-link {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .collapse-btn {
+      width: 24px; height: 24px;
+      background: rgba(255,255,255,0.08);
+      border: none;
+      border-radius: 4px;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Main ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .notification-bar {
+      background: #eeeef8;
+      padding: 9px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #333;
+      flex-shrink: 0;
+    }
+
+    .notification-bar .notif-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .notif-icon {
+      width: 16px; height: 16px;
+      background: #4046ca;
+      border-radius: 50%;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .btn-view {
+      background: #4046ca;
+      color: white;
+      border: none;
+      padding: 7px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 20px 24px 0;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content h1 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+
+    .balance-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .balance-amount {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2e7d32;
+    }
+
+    .balance-amount.uncleared { color: #888; }
+
+    .balance-working { color: #2e7d32; font-size: 18px; font-weight: 700; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .toolbar-btn {
+      background: none;
+      border: none;
+      color: #4046ca;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0;
+    }
+
+    .toolbar-divider {
+      width: 1px;
+      height: 16px;
+      background: #ddd;
+    }
+
+    .toolbar-muted {
+      color: #aaa;
+      font-size: 12px;
+    }
+
+    .toolbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-pill {
+      background: #f0f0f8;
+      border: 1px solid #dde;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Table ── */
+    .table-wrap { flex: 1; overflow-y: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #999;
+      padding: 6px 8px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    thead th.right { text-align: right; }
+    thead th.icon-col { width: 24px; padding: 6px 4px; }
+
+    tbody tr {
+      border-bottom: 1px solid #f3f3f3;
+      cursor: pointer;
+    }
+
+    tbody tr:hover td { background: #f8f8ff; }
+
+    tbody tr.selected td { background: #eef0ff; }
+
+    td {
+      padding: 9px 8px;
+      color: #2a2a3a;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    td.icon-col {
+      padding: 9px 4px;
+      width: 24px;
+    }
+
+    .row-checkbox {
+      width: 14px; height: 14px;
+      border: 1.5px solid #ccc;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .row-checkbox.checked {
+      background: #4046ca;
+      border-color: #4046ca;
+    }
+
+    .info-icon {
+      width: 16px; height: 16px;
+      background: #4046ca;
+      border-radius: 50%;
+      color: white;
+      font-size: 9px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .small-icon {
+      width: 16px; height: 16px;
+      border: 1.5px solid #ccc;
+      border-radius: 3px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      color: #aaa;
+    }
+
+    .cleared-dot {
+      width: 16px; height: 16px;
+      background: #4caf88;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .payee-amazon { color: #333; }
+
+    .category-cell {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .amount-out { text-align: right; color: #2a2a3a; }
+    .amount-in  { text-align: right; color: #2e7d32; }
+
+    .memo-suggestion {
+      color: #b85c00;
+      font-style: italic;
+      opacity: 0.8;
+    }
+
+    .enriched-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      background: #4046ca;
+      border-radius: 50%;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.42);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      padding: 32px 36px;
+      width: 440px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+      text-align: center;
+    }
+
+    .modal-icon { font-size: 34px; margin-bottom: 14px; }
+
+    .modal h2 {
+      font-size: 19px;
+      font-weight: 800;
+      color: #1a2340;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .modal p {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+
+    .btn-primary {
+      background: #4046ca;
+      color: white;
+      border: none;
+      padding: 13px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .btn-primary:hover { background: #3339b0; }
+    .btn-primary:disabled { opacity: 0.4; cursor: default; }
+
+    .btn-secondary {
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .btn-secondary:hover { color: #555; }
+
+    .modal-back {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 12px;
+      cursor: pointer;
+      display: block;
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .modal-back:hover { color: #555; }
+
+    .modal-step { display: none; }
+    .modal-step.active { display: block; }
+
+    /* Provider buttons */
+    .provider-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+
+    .provider-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border: 2px solid #e0e0e8;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: #1a2340;
+      text-align: left;
+    }
+
+    .provider-btn:hover { border-color: #4046ca; }
+    .provider-btn.selected { border-color: #4046ca; background: #f0f1ff; }
+    .provider-icon { font-size: 18px; width: 22px; text-align: center; }
+
+    .privacy-note {
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .privacy-note a { color: #4046ca; text-decoration: none; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a2340;
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 200;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <svg class="ynab-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="14" fill="#4046ca"/>
+      <path d="M16 6 L16 26 M6 16 L26 16 M9 9 L23 23 M23 9 L9 23" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="sidebar-user-info">
+      <div class="budget-name">Alicia's Budget <span class="arrow">▼</span></div>
+      <div class="email">aliciamengelkamp@gmail.com</div>
+    </div>
+  </div>
+
+  <ul class="sidebar-nav">
+    <li><span class="nav-icon">📅</span> Plan</li>
+    <li><span class="nav-icon">📊</span> Reflect</li>
+    <li class="active"><span class="nav-icon">🏦</span> All Accounts</li>
+  </ul>
+
+  <div class="sidebar-accounts">
+    <div class="accounts-section-label">Cash &nbsp; €10,650.00</div>
+    <div class="account-row">
+      <span class="acc-name"><span class="dot"></span> Girokonto</span>
+      <span>€2,450.00 <span class="check">✓</span></span>
+    </div>
+    <div class="account-row">
+      <span class="acc-name"><span class="dot"></span> Tagesgeld PLUS-Konto</span>
+      <span>€8,200.00 <span class="check">✓</span></span>
+    </div>
+    <div class="accounts-section-label closed">▶ Closed</div>
+  </div>
+
+  <div class="sidebar-buttons">
+    <button class="sidebar-btn">＋ Add Account</button>
+    <button class="sidebar-btn">🏦 Bank Connections</button>
+  </div>
+
+  <div class="sidebar-footer">
+    <span class="refer-link">♥ Refer a Friend</span>
+    <button class="collapse-btn">◀</button>
+  </div>
+</aside>
+
+<!-- ── Main ── -->
+<main class="main">
+  <div class="notification-bar">
+    <div class="notif-left">
+      <span class="notif-icon">i</span>
+      15 new transactions to approve or categorize.
+    </div>
+    <button class="btn-view">View</button>
+  </div>
+
+  <div class="content">
+    <h1>All Accounts</h1>
+
+    <div class="balance-row">
+      <span class="balance-amount">€10,650.00</span>
+      <span>Cleared Balance</span>
+      <span>+</span>
+      <span class="balance-amount uncleared">€0.00</span>
+      <span>Uncleared Balance</span>
+      <span>=</span>
+      <span class="balance-working">€10,650.00</span>
+      <span>Working Balance</span>
+    </div>
+
+    <div class="toolbar">
+      <button class="toolbar-btn">＋ Add Transaction</button>
+      <button class="toolbar-btn">📄 File Import</button>
+      <div class="toolbar-divider"></div>
+      <span class="toolbar-muted">↩ Undo</span>
+      <span class="toolbar-muted">↪ Redo</span>
+      <div class="toolbar-right">
+        <span class="toolbar-muted">View ▾</span>
+        <div class="filter-pill">Is: Unapproved or New ✕</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="icon-col"></th>
+            <th class="icon-col"></th>
+            <th class="icon-col"></th>
+            <th class="icon-col"></th>
+            <th>Account</th>
+            <th>Date ▾</th>
+            <th>Payee</th>
+            <th>Category</th>
+            <th>Memo</th>
+            <th class="right">Outflow</th>
+            <th class="right">Inflow</th>
+            <th class="icon-col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon">☰</span></td>
+            <td class="icon-col"><span class="small-icon">🖼</span></td>
+            <td>Girokonto</td>
+            <td>05/06/2026</td>
+            <td>Finion Capital GmbH</td>
+            <td><span class="category-cell">🏦 NEEDS: 🎉…</span></td>
+            <td></td>
+            <td class="amount-out">€29.90</td>
+            <td class="amount-in"></td>
+            <td class="icon-col"><span class="cleared-dot"></span></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon">☰</span></td>
+            <td class="icon-col"><span class="small-icon">🖼</span></td>
+            <td>Girokonto</td>
+            <td>04/06/2026</td>
+            <td>Süddeutsche Krankenversicherung</td>
+            <td><span class="category-cell">🏦 NEEDS: 🧾…</span></td>
+            <td></td>
+            <td class="amount-out">€14.57</td>
+            <td class="amount-in"></td>
+            <td class="icon-col"><span class="cleared-dot"></span></td>
+          </tr>
+          <tr class="selected">
+            <td class="icon-col"><span class="row-checkbox checked"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon">☰</span></td>
+            <td class="icon-col"><span class="small-icon">🖼</span></td>
+            <td>Girokonto</td>
+            <td>03/06/2026</td>
+            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
+            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
+            <td><span class="memo-suggestion" id="memo1">Kindle Paperwhite Case</span><span class="enriched-dot" id="ind1"></span></td>
+            <td class="amount-out">€17.05</td>
+            <td class="amount-in"></td>
+            <td class="icon-col"><span class="cleared-dot"></span></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon">☰</span></td>
+            <td class="icon-col"><span class="small-icon">🖼</span></td>
+            <td>Girokonto</td>
+            <td>02/06/2026</td>
+            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
+            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
+            <td><span class="memo-suggestion" id="memo2">NIVEA Body Lotion 400ml</span><span class="enriched-dot" id="ind2"></span></td>
+            <td class="amount-out">€17.99</td>
+            <td class="amount-in"></td>
+            <td class="icon-col"><span class="cleared-dot"></span></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon">☰</span></td>
+            <td class="icon-col"><span class="small-icon">🖼</span></td>
+            <td>Girokonto</td>
+            <td>29/05/2026</td>
+            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
+            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
+            <td><span class="memo-suggestion" id="memo3">LEGO Technic Set 42161</span><span class="enriched-dot" id="ind3"></span></td>
+            <td class="amount-out">€32.99</td>
+            <td class="amount-in"></td>
+            <td class="icon-col"><span class="cleared-dot"></span></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon">☰</span></td>
+            <td class="icon-col"><span class="small-icon">🖼</span></td>
+            <td>Girokonto</td>
+            <td>29/05/2026</td>
+            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
+            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
+            <td><span class="memo-suggestion" id="memo4">USB-C Hub 7-in-1</span><span class="enriched-dot" id="ind4"></span></td>
+            <td class="amount-out">€22.49</td>
+            <td class="amount-in"></td>
+            <td class="icon-col"><span class="cleared-dot"></span></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon">☰</span></td>
+            <td class="icon-col"><span class="small-icon">🖼</span></td>
+            <td>Girokonto</td>
+            <td>25/05/2026</td>
+            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
+            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
+            <td><span class="memo-suggestion" id="memo5">Vitamin D3 Tabletten 365 St.</span><span class="enriched-dot" id="ind5"></span></td>
+            <td class="amount-out">€32.99</td>
+            <td class="amount-in"></td>
+            <td class="icon-col"><span class="cleared-dot"></span></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon">☰</span></td>
+            <td class="icon-col"><span class="small-icon">🖼</span></td>
+            <td>Girokonto</td>
+            <td>19/05/2026</td>
+            <td>Hidden Categorie…</td>
+            <td><span class="category-cell">💡…</span></td>
+            <td></td>
+            <td class="amount-out">€9.99</td>
+            <td class="amount-in"></td>
+            <td class="icon-col"><span class="cleared-dot"></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ── Modal ── -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+
+    <!-- Step 1 -->
+    <div class="modal-step active" id="step1">
+      <div class="modal-icon">✉️</div>
+      <h2>Give your Amazon transactions a name.</h2>
+      <p>Connect your email and we'll match your orders to your transactions — automatically.</p>
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="showStep('step2')">Connect email</button>
+        <button class="btn-secondary" onclick="closeModal()">Maybe later</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="modal-step" id="step2">
+      <button class="modal-back" onclick="showStep('step1')">← Back</button>
+      <div class="modal-icon">🔗</div>
+      <h2>Choose your email provider.</h2>
+      <p>We'll only ever read emails from Amazon. Nothing else, ever.</p>
+      <div class="provider-options">
+        <button class="provider-btn" onclick="selectProvider(this)">
+          <span class="provider-icon">📧</span> Gmail
+        </button>
+        <button class="provider-btn" onclick="selectProvider(this)">
+          <span class="provider-icon">💼</span> Outlook / Microsoft
+        </button>
+        <button class="provider-btn" onclick="selectProvider(this)">
+          <span class="provider-icon">✉️</span> Other (IMAP)
+        </button>
+      </div>
+      <p class="privacy-note">🔒 YNAB uses read-only access. We never store your emails — only the order data we extract. <a href="#">Learn more about our privacy practices.</a></p>
+      <div class="modal-actions">
+        <button class="btn-primary" id="connect-btn" disabled onclick="connectAndEnrich()">Connect &amp; scan inbox</button>
+        <button class="btn-secondary" onclick="closeModal()">Maybe later</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ 5 Amazon orders matched and enriched</div>
+
+<script>
+  function showStep(id) {
+    document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
+  function selectProvider(btn) {
+    document.querySelectorAll('.provider-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('connect-btn').disabled = false;
+  }
+
+  function connectAndEnrich() {
+    closeModal();
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+</script>
+
+</body>
+</html>
