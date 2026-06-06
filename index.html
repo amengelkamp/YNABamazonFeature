@@ -4,193 +4,98 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YNAB — Amazon Enrichment Feature Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --color-sidebar:       #1a2340;
+      --color-primary:       #4046ca;
+      --color-notif-bar:     #eeeef8;
+      --color-positive:      #2e7d32;
+      --color-cleared:       #4caf88;
+      --color-enriched:      #b85c00;
+      --color-bg:            #ffffff;
+      --color-text:          #1c1c2e;
+      --color-text-muted:    #aaaaaa;
+      --color-border:        #ededed;
+      --color-row-selected:  #eaebff;
+      --color-row-hover:     #f5f5ff;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--color-bg);
       display: flex;
       height: 100vh;
       overflow: hidden;
       font-size: 13px;
     }
 
-    /* ── Sidebar ── */
+    /* ── Sidebar (icon-only strip) ── */
     .sidebar {
-      width: 224px;
-      background: #1a2340;
-      color: #fff;
+      width: 52px;
+      background: var(--color-sidebar);
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
-      overflow-y: auto;
-    }
-
-    .sidebar-header {
-      padding: 14px 14px 12px;
-      display: flex;
       align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .ynab-logo {
-      width: 28px;
-      height: 28px;
       flex-shrink: 0;
+      padding: 10px 0;
     }
 
-    .sidebar-user-info {
+    .sidebar-logo {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 18px;
+    }
+
+    .nav-icons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
       flex: 1;
-      min-width: 0;
     }
 
-    .sidebar-user-info .budget-name {
-      font-size: 13px;
-      font-weight: 700;
+    .nav-icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
-      gap: 4px;
-    }
-
-    .sidebar-user-info .budget-name .arrow {
-      opacity: 0.5;
-      font-size: 10px;
-    }
-
-    .sidebar-user-info .email {
-      font-size: 10px;
-      opacity: 0.5;
-      margin-top: 1px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .sidebar-nav {
-      list-style: none;
-      padding: 10px 8px;
-    }
-
-    .sidebar-nav li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 10px;
-      border-radius: 6px;
-      font-size: 13px;
+      justify-content: center;
       cursor: pointer;
-      color: rgba(255,255,255,0.65);
-    }
-
-    .sidebar-nav li .nav-icon {
-      width: 16px;
-      text-align: center;
-      font-size: 14px;
-      opacity: 0.8;
-    }
-
-    .sidebar-nav li.active {
-      background: rgba(255,255,255,0.14);
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .sidebar-accounts {
-      padding: 4px 8px 8px;
-    }
-
-    .accounts-section-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.4);
-      padding: 8px 10px 4px;
-    }
-
-    .account-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 10px;
-      font-size: 12px;
-      color: rgba(255,255,255,0.75);
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .account-row:hover { background: rgba(255,255,255,0.06); }
-
-    .account-row .acc-name { display: flex; align-items: center; gap: 5px; }
-
-    .account-row .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.4);
-      flex-shrink: 0;
-    }
-
-    .account-row .check { color: #4caf88; font-size: 11px; }
-
-    .accounts-section-label.closed {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-    }
-
-    .sidebar-buttons {
-      padding: 8px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .sidebar-btn {
+      color: rgba(255,255,255,0.5);
+      font-size: 16px;
+      border: none;
       background: none;
-      border: 1px solid rgba(255,255,255,0.25);
-      color: rgba(255,255,255,0.75);
-      padding: 7px 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      width: 100%;
     }
 
-    .sidebar-btn:hover { background: rgba(255,255,255,0.07); }
-
-    .sidebar-footer {
-      margin-top: auto;
-      padding: 10px 14px 14px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .nav-icon-btn.active {
+      background: var(--color-primary);
+      color: #fff;
     }
 
-    .refer-link {
-      font-size: 12px;
-      color: rgba(255,255,255,0.55);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
+    .nav-icon-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
     }
 
-    .collapse-btn {
-      width: 24px; height: 24px;
+    .sidebar-collapse {
+      width: 32px;
+      height: 32px;
       background: rgba(255,255,255,0.08);
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       color: rgba(255,255,255,0.4);
       cursor: pointer;
-      font-size: 12px;
-      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: auto;
     }
 
     /* ── Main ── */
@@ -199,11 +104,12 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      background: var(--color-bg);
     }
 
     .notification-bar {
-      background: #eeeef8;
-      padding: 9px 20px;
+      background: var(--color-notif-bar);
+      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -212,182 +118,219 @@
       flex-shrink: 0;
     }
 
-    .notification-bar .notif-left {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .notif-icon {
-      width: 16px; height: 16px;
-      background: #4046ca;
-      border-radius: 50%;
-      color: white;
-      font-size: 10px;
-      font-weight: 700;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .btn-view {
-      background: #4046ca;
-      color: white;
-      border: none;
-      padding: 7px 20px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .content {
-      padding: 20px 24px 0;
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .content h1 {
-      font-size: 20px;
-      font-weight: 800;
-      color: #1a1a2e;
-      margin-bottom: 10px;
-    }
-
-    .balance-row {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 16px;
-      font-size: 12px;
-      color: #666;
-    }
-
-    .balance-amount {
-      font-size: 18px;
-      font-weight: 700;
-      color: #2e7d32;
-    }
-
-    .balance-amount.uncleared { color: #888; }
-
-    .balance-working { color: #2e7d32; font-size: 18px; font-weight: 700; }
-
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .toolbar-btn {
-      background: none;
-      border: none;
-      color: #4046ca;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 0;
-    }
-
-    .toolbar-divider {
-      width: 1px;
-      height: 16px;
-      background: #ddd;
-    }
-
-    .toolbar-muted {
-      color: #aaa;
-      font-size: 12px;
-    }
-
-    .toolbar-right {
-      margin-left: auto;
+    .notif-left {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .filter-pill {
-      background: #f0f0f8;
-      border: 1px solid #dde;
+    .notif-icon {
+      width: 18px; height: 18px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      color: white;
+      font-size: 10px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .btn-view {
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      padding: 7px 22px;
       border-radius: 20px;
-      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ── Content ── */
+    .content {
+      padding: 20px 28px 0;
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .content h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: 12px;
+    }
+
+    .balance-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .balance-operator {
+      font-size: 18px;
+      color: #bbb;
+      font-weight: 400;
+      align-self: flex-start;
+      padding-top: 4px;
+    }
+
+    .balance-card {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .balance-amount {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-positive);
+      line-height: 1.1;
+    }
+
+    .balance-amount.uncleared { color: #999; }
+
+    .balance-label {
       font-size: 11px;
-      color: #555;
+      color: #888;
       display: flex;
       align-items: center;
       gap: 4px;
     }
 
+    .balance-label-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .balance-label-dot.green   { background: var(--color-cleared); }
+    .balance-label-dot.gray    { border: 1.5px solid #ccc; background: transparent; }
+    .balance-label-dot.working { background: var(--color-positive); }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 0;
+      padding-bottom: 10px;
+    }
+
+    .toolbar-btn {
+      background: none;
+      border: none;
+      color: var(--color-primary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0;
+    }
+
+    .toolbar-divider { width: 1px; height: 16px; background: #ddd; }
+
+    .toolbar-muted { color: #bbb; font-size: 12px; cursor: pointer; }
+    .toolbar-muted:hover { color: #888; }
+
+    .toolbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+    .filter-pill {
+      background: #fff;
+      border: 1px solid #ccd;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: #444;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .search-icon { color: #aaa; font-size: 12px; }
+
     /* ── Table ── */
     .table-wrap { flex: 1; overflow-y: auto; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
+
+    thead tr { border-bottom: 2px solid #eee; }
 
     thead th {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.07em;
-      color: #999;
-      padding: 6px 8px;
-      border-bottom: 1px solid #eee;
+      color: #aaa;
+      padding: 8px 10px;
       text-align: left;
       white-space: nowrap;
+      background: #fff;
     }
 
     thead th.right { text-align: right; }
-    thead th.icon-col { width: 24px; padding: 6px 4px; }
+    thead th.icon-col { width: 28px; padding: 8px 4px; }
+
+    /* Round header checkbox */
+    .th-checkbox {
+      width: 16px; height: 16px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .th-checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 10px;
+      font-weight: 900;
+    }
 
     tbody tr {
-      border-bottom: 1px solid #f3f3f3;
+      border-bottom: 1px solid var(--color-border);
       cursor: pointer;
     }
 
-    tbody tr:hover td { background: #f8f8ff; }
-
-    tbody tr.selected td { background: #eef0ff; }
+    tbody tr:hover td { background: var(--color-row-hover); }
+    tbody tr.selected td { background: var(--color-row-selected); }
 
     td {
-      padding: 9px 8px;
-      color: #2a2a3a;
-      font-size: 12px;
+      padding: 14px 10px;
+      color: var(--color-text);
+      font-size: 14px;
+      font-weight: 500;
       white-space: nowrap;
     }
 
-    td.icon-col {
-      padding: 9px 4px;
-      width: 24px;
-    }
+    td.icon-col { padding: 14px 4px; width: 28px; }
 
+    /* Round row checkbox */
     .row-checkbox {
-      width: 14px; height: 14px;
+      width: 16px; height: 16px;
       border: 1.5px solid #ccc;
-      border-radius: 3px;
+      border-radius: 50%;
       display: inline-block;
     }
 
     .row-checkbox.checked {
-      background: #4046ca;
-      border-color: #4046ca;
+      background: var(--color-primary);
+      border-color: var(--color-primary);
     }
 
     .info-icon {
-      width: 16px; height: 16px;
-      background: #4046ca;
+      width: 18px; height: 18px;
+      background: var(--color-primary);
       border-radius: 50%;
       color: white;
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 900;
       display: inline-flex;
       align-items: center;
@@ -395,51 +338,65 @@
     }
 
     .small-icon {
-      width: 16px; height: 16px;
-      border: 1.5px solid #ccc;
-      border-radius: 3px;
+      width: 18px; height: 18px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 8px;
-      color: #aaa;
+      color: #ccc;
     }
 
-    .cleared-dot {
-      width: 16px; height: 16px;
-      background: #4caf88;
-      border-radius: 50%;
-      display: inline-block;
-    }
+    .category-cell { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
 
-    .payee-amazon { color: #333; }
-
-    .category-cell {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .amount-out { text-align: right; color: #2a2a3a; }
-    .amount-in  { text-align: right; color: #2e7d32; }
+    .amount-out { text-align: right; }
+    .amount-in  { text-align: right; color: var(--color-positive); }
 
     .memo-suggestion {
-      color: #b85c00;
+      color: var(--color-enriched);
       font-style: italic;
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     .enriched-dot {
       display: inline-block;
       width: 6px; height: 6px;
-      background: #4046ca;
+      background: var(--color-primary);
       border-radius: 50%;
-      margin-left: 4px;
+      margin-left: 5px;
       vertical-align: middle;
     }
+
+    /* ── Bottom action bar ── */
+    .action-bar {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e2540;
+      color: #fff;
+      padding: 0 6px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: 13px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      z-index: 50;
+    }
+
+    .action-bar-item {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .action-bar-item:last-child { border-right: none; }
+    .action-bar-item:hover { background: rgba(255,255,255,0.08); border-radius: 8px; }
+    .action-bar-item .ab-icon { opacity: 0.7; font-size: 12px; }
+    .action-bar-item.close-btn { color: rgba(255,255,255,0.5); }
 
     /* ── Modal ── */
     .modal-overlay {
@@ -454,8 +411,8 @@
 
     .modal {
       background: #fff;
-      border-radius: 14px;
-      padding: 32px 36px;
+      border-radius: 16px;
+      padding: 34px 38px;
       width: 440px;
       box-shadow: 0 24px 64px rgba(0,0,0,0.22);
       text-align: center;
@@ -464,16 +421,16 @@
     .modal-icon { font-size: 34px; margin-bottom: 14px; }
 
     .modal h2 {
-      font-size: 19px;
+      font-size: 20px;
       font-weight: 800;
-      color: #1a2340;
+      color: var(--color-text);
       margin-bottom: 10px;
       line-height: 1.3;
     }
 
     .modal p {
       font-size: 13px;
-      color: #666;
+      color: #777;
       line-height: 1.6;
       margin-bottom: 24px;
     }
@@ -481,7 +438,7 @@
     .modal-actions { display: flex; flex-direction: column; gap: 10px; }
 
     .btn-primary {
-      background: #4046ca;
+      background: var(--color-primary);
       color: white;
       border: none;
       padding: 13px;
@@ -498,7 +455,7 @@
     .btn-secondary {
       background: none;
       border: none;
-      color: #999;
+      color: #aaa;
       font-size: 12px;
       cursor: pointer;
       padding: 4px;
@@ -509,7 +466,7 @@
     .modal-back {
       background: none;
       border: none;
-      color: #aaa;
+      color: #bbb;
       font-size: 12px;
       cursor: pointer;
       display: block;
@@ -522,47 +479,46 @@
     .modal-step { display: none; }
     .modal-step.active { display: block; }
 
-    /* Provider buttons */
     .provider-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 
     .provider-btn {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 11px 14px;
-      border: 2px solid #e0e0e8;
+      padding: 12px 14px;
+      border: 2px solid #e4e4f0;
       border-radius: 8px;
       background: #fff;
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
-      color: #1a2340;
+      color: var(--color-text);
       text-align: left;
     }
 
-    .provider-btn:hover { border-color: #4046ca; }
-    .provider-btn.selected { border-color: #4046ca; background: #f0f1ff; }
+    .provider-btn:hover { border-color: var(--color-primary); }
+    .provider-btn.selected { border-color: var(--color-primary); background: #f0f1ff; }
     .provider-icon { font-size: 18px; width: 22px; text-align: center; }
 
     .privacy-note {
       font-size: 11px;
-      color: #aaa;
+      color: #bbb;
       line-height: 1.5;
       margin-bottom: 20px;
       text-align: left;
     }
 
-    .privacy-note a { color: #4046ca; text-decoration: none; }
+    .privacy-note a { color: var(--color-primary); text-decoration: none; }
 
-    /* Toast */
+    /* ── Toast ── */
     .toast {
       position: fixed;
       bottom: 28px;
       left: 50%;
       transform: translateX(-50%);
-      background: #1a2340;
+      background: #1e2540;
       color: #fff;
-      padding: 11px 22px;
+      padding: 12px 22px;
       border-radius: 8px;
       font-size: 13px;
       font-weight: 500;
@@ -578,47 +534,35 @@
 </head>
 <body>
 
-<!-- ── Sidebar ── -->
+<!-- ── Sidebar (icon strip) ── -->
 <aside class="sidebar">
-  <div class="sidebar-header">
-    <svg class="ynab-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="16" cy="16" r="14" fill="#4046ca"/>
-      <path d="M16 6 L16 26 M6 16 L26 16 M9 9 L23 23 M23 9 L9 23" stroke="white" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-    <div class="sidebar-user-info">
-      <div class="budget-name">Alicia's Budget <span class="arrow">▼</span></div>
-      <div class="email">aliciamengelkamp@gmail.com</div>
-    </div>
+  <!-- YNAB Tree Logo -->
+  <svg class="sidebar-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 3 C16 3 8 10 8 17 C8 21.4 11.6 25 16 25 C20.4 25 24 21.4 24 17 C24 10 16 3 16 3Z" fill="white" opacity="0.9"/>
+    <path d="M16 25 L16 30" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M10 20 L7 23" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <path d="M22 20 L25 23" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+  </svg>
+
+  <div class="nav-icons">
+    <button class="nav-icon-btn" title="Plan">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+    </button>
+    <button class="nav-icon-btn" title="Reflect">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+    </button>
+    <button class="nav-icon-btn active" title="All Accounts">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>
+      </svg>
+    </button>
   </div>
 
-  <ul class="sidebar-nav">
-    <li><span class="nav-icon">📅</span> Plan</li>
-    <li><span class="nav-icon">📊</span> Reflect</li>
-    <li class="active"><span class="nav-icon">🏦</span> All Accounts</li>
-  </ul>
-
-  <div class="sidebar-accounts">
-    <div class="accounts-section-label">Cash &nbsp; €10,650.00</div>
-    <div class="account-row">
-      <span class="acc-name"><span class="dot"></span> Girokonto</span>
-      <span>€2,450.00 <span class="check">✓</span></span>
-    </div>
-    <div class="account-row">
-      <span class="acc-name"><span class="dot"></span> Tagesgeld PLUS-Konto</span>
-      <span>€8,200.00 <span class="check">✓</span></span>
-    </div>
-    <div class="accounts-section-label closed">▶ Closed</div>
-  </div>
-
-  <div class="sidebar-buttons">
-    <button class="sidebar-btn">＋ Add Account</button>
-    <button class="sidebar-btn">🏦 Bank Connections</button>
-  </div>
-
-  <div class="sidebar-footer">
-    <span class="refer-link">♥ Refer a Friend</span>
-    <button class="collapse-btn">◀</button>
-  </div>
+  <button class="sidebar-collapse">▶</button>
 </aside>
 
 <!-- ── Main ── -->
@@ -635,14 +579,20 @@
     <h1>All Accounts</h1>
 
     <div class="balance-row">
-      <span class="balance-amount">€10,650.00</span>
-      <span>Cleared Balance</span>
-      <span>+</span>
-      <span class="balance-amount uncleared">€0.00</span>
-      <span>Uncleared Balance</span>
-      <span>=</span>
-      <span class="balance-working">€10,650.00</span>
-      <span>Working Balance</span>
+      <div class="balance-card">
+        <span class="balance-amount">€4,320.00</span>
+        <span class="balance-label"><span class="balance-label-dot green"></span> Cleared Balance</span>
+      </div>
+      <span class="balance-operator">+</span>
+      <div class="balance-card">
+        <span class="balance-amount uncleared">€0.00</span>
+        <span class="balance-label"><span class="balance-label-dot gray"></span> Uncleared Balance</span>
+      </div>
+      <span class="balance-operator">=</span>
+      <div class="balance-card">
+        <span class="balance-amount">€4,320.00</span>
+        <span class="balance-label"><span class="balance-label-dot working"></span> Working Balance</span>
+      </div>
     </div>
 
     <div class="toolbar">
@@ -653,7 +603,7 @@
       <span class="toolbar-muted">↪ Redo</span>
       <div class="toolbar-right">
         <span class="toolbar-muted">View ▾</span>
-        <div class="filter-pill">Is: Unapproved or New ✕</div>
+        <div class="filter-pill"><span class="search-icon">🔍</span> Is: Unapproved or Needs Category <span style="background:#bbb;color:#fff;border-radius:50%;width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer;">✕</span></div>
       </div>
     </div>
 
@@ -661,138 +611,164 @@
       <table>
         <thead>
           <tr>
+            <th class="icon-col"><span class="th-checkbox"></span></th>
             <th class="icon-col"></th>
             <th class="icon-col"></th>
             <th class="icon-col"></th>
-            <th class="icon-col"></th>
-            <th>Account</th>
-            <th>Date ▾</th>
-            <th>Payee</th>
-            <th>Category</th>
-            <th>Memo</th>
-            <th class="right">Outflow</th>
-            <th class="right">Inflow</th>
-            <th class="icon-col"></th>
+            <th>ACCOUNT</th>
+            <th>DATE ▾</th>
+            <th>PAYEE</th>
+            <th>CATEGORY</th>
+            <th>MEMO</th>
+            <th class="right">OUTFLOW</th>
+            <th class="right">INFLOW</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="icon-col"><span class="row-checkbox"></span></td>
             <td class="icon-col"><span class="info-icon">i</span></td>
-            <td class="icon-col"><span class="small-icon">☰</span></td>
-            <td class="icon-col"><span class="small-icon">🖼</span></td>
-            <td>Girokonto</td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
             <td>05/06/2026</td>
-            <td>Finion Capital GmbH</td>
-            <td><span class="category-cell">🏦 NEEDS: 🎉…</span></td>
+            <td>Spotify</td>
+            <td><span class="category-cell">Entertainment</span></td>
             <td></td>
-            <td class="amount-out">€29.90</td>
+            <td class="amount-out">€9.99</td>
             <td class="amount-in"></td>
-            <td class="icon-col"><span class="cleared-dot"></span></td>
           </tr>
           <tr>
             <td class="icon-col"><span class="row-checkbox"></span></td>
             <td class="icon-col"><span class="info-icon">i</span></td>
-            <td class="icon-col"><span class="small-icon">☰</span></td>
-            <td class="icon-col"><span class="small-icon">🖼</span></td>
-            <td>Girokonto</td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
             <td>04/06/2026</td>
-            <td>Süddeutsche Krankenversicherung</td>
-            <td><span class="category-cell">🏦 NEEDS: 🧾…</span></td>
+            <td>Rewe</td>
+            <td><span class="category-cell">Groceries</span></td>
             <td></td>
-            <td class="amount-out">€14.57</td>
+            <td class="amount-out">€54.30</td>
             <td class="amount-in"></td>
-            <td class="icon-col"><span class="cleared-dot"></span></td>
           </tr>
           <tr class="selected">
             <td class="icon-col"><span class="row-checkbox checked"></span></td>
             <td class="icon-col"><span class="info-icon">i</span></td>
-            <td class="icon-col"><span class="small-icon">☰</span></td>
-            <td class="icon-col"><span class="small-icon">🖼</span></td>
-            <td>Girokonto</td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
             <td>03/06/2026</td>
-            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
-            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
-            <td><span class="memo-suggestion" id="memo1">Kindle Paperwhite Case</span><span class="enriched-dot" id="ind1"></span></td>
-            <td class="amount-out">€17.05</td>
+            <td>114-2847362-005831…</td>
+            <td><span class="category-cell">Shopping</span></td>
+            <td><span class="memo-suggestion">Kindle Paperwhite Case, Black</span><span class="enriched-dot"></span></td>
+            <td class="amount-out">€14.99</td>
             <td class="amount-in"></td>
-            <td class="icon-col"><span class="cleared-dot"></span></td>
           </tr>
           <tr>
             <td class="icon-col"><span class="row-checkbox"></span></td>
             <td class="icon-col"><span class="info-icon">i</span></td>
-            <td class="icon-col"><span class="small-icon">☰</span></td>
-            <td class="icon-col"><span class="small-icon">🖼</span></td>
-            <td>Girokonto</td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
             <td>02/06/2026</td>
-            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
-            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
-            <td><span class="memo-suggestion" id="memo2">NIVEA Body Lotion 400ml</span><span class="enriched-dot" id="ind2"></span></td>
+            <td>171-5539204-118473…</td>
+            <td><span class="category-cell">Health</span></td>
+            <td><span class="memo-suggestion">Vitamin D3 + K2, 365 Kapseln</span><span class="enriched-dot"></span></td>
+            <td class="amount-out">€18.90</td>
+            <td class="amount-in"></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
+            <td>01/06/2026</td>
+            <td>GEZ Beitragsservice</td>
+            <td><span class="category-cell">Bills</span></td>
+            <td></td>
+            <td class="amount-out">€55.08</td>
+            <td class="amount-in"></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
+            <td>30/05/2026</td>
+            <td>205-6612048-774920…</td>
+            <td><span class="category-cell">Books</span></td>
+            <td><span class="memo-suggestion">Atomic Habits — James Clear</span><span class="enriched-dot"></span></td>
+            <td class="amount-out">€13.99</td>
+            <td class="amount-in"></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
+            <td>29/05/2026</td>
+            <td>312-7741093-228561…</td>
+            <td><span class="category-cell">Electronics</span></td>
+            <td><span class="memo-suggestion">Anker USB-C Hub 7-in-1</span><span class="enriched-dot"></span></td>
+            <td class="amount-out">€39.99</td>
+            <td class="amount-in"></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Savings</span></td>
+            <td>28/05/2026</td>
+            <td>Employer GmbH</td>
+            <td><span class="category-cell">Income</span></td>
+            <td></td>
+            <td class="amount-out"></td>
+            <td class="amount-in">€2,800.00</td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
+            <td>27/05/2026</td>
+            <td>188-4430917-663042…</td>
+            <td><span class="category-cell">Household</span></td>
+            <td><span class="memo-suggestion">IKEA LACK Beistelltisch, weiß</span><span class="enriched-dot"></span></td>
+            <td class="amount-out">€24.99</td>
+            <td class="amount-in"></td>
+          </tr>
+          <tr>
+            <td class="icon-col"><span class="row-checkbox"></span></td>
+            <td class="icon-col"><span class="info-icon">i</span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span></td>
+            <td class="icon-col"><span class="small-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span></td>
+            <td><span class="account-name">Checking</span></td>
+            <td>26/05/2026</td>
+            <td>Netflix</td>
+            <td><span class="category-cell">Entertainment</span></td>
+            <td></td>
             <td class="amount-out">€17.99</td>
             <td class="amount-in"></td>
-            <td class="icon-col"><span class="cleared-dot"></span></td>
-          </tr>
-          <tr>
-            <td class="icon-col"><span class="row-checkbox"></span></td>
-            <td class="icon-col"><span class="info-icon">i</span></td>
-            <td class="icon-col"><span class="small-icon">☰</span></td>
-            <td class="icon-col"><span class="small-icon">🖼</span></td>
-            <td>Girokonto</td>
-            <td>29/05/2026</td>
-            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
-            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
-            <td><span class="memo-suggestion" id="memo3">LEGO Technic Set 42161</span><span class="enriched-dot" id="ind3"></span></td>
-            <td class="amount-out">€32.99</td>
-            <td class="amount-in"></td>
-            <td class="icon-col"><span class="cleared-dot"></span></td>
-          </tr>
-          <tr>
-            <td class="icon-col"><span class="row-checkbox"></span></td>
-            <td class="icon-col"><span class="info-icon">i</span></td>
-            <td class="icon-col"><span class="small-icon">☰</span></td>
-            <td class="icon-col"><span class="small-icon">🖼</span></td>
-            <td>Girokonto</td>
-            <td>29/05/2026</td>
-            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
-            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
-            <td><span class="memo-suggestion" id="memo4">USB-C Hub 7-in-1</span><span class="enriched-dot" id="ind4"></span></td>
-            <td class="amount-out">€22.49</td>
-            <td class="amount-in"></td>
-            <td class="icon-col"><span class="cleared-dot"></span></td>
-          </tr>
-          <tr>
-            <td class="icon-col"><span class="row-checkbox"></span></td>
-            <td class="icon-col"><span class="info-icon">i</span></td>
-            <td class="icon-col"><span class="small-icon">☰</span></td>
-            <td class="icon-col"><span class="small-icon">🖼</span></td>
-            <td>Girokonto</td>
-            <td>25/05/2026</td>
-            <td class="payee-amazon">304-1431326-3637907 AMZ…</td>
-            <td><span class="category-cell">😍 SAVINGS - TA…</span></td>
-            <td><span class="memo-suggestion" id="memo5">Vitamin D3 Tabletten 365 St.</span><span class="enriched-dot" id="ind5"></span></td>
-            <td class="amount-out">€32.99</td>
-            <td class="amount-in"></td>
-            <td class="icon-col"><span class="cleared-dot"></span></td>
-          </tr>
-          <tr>
-            <td class="icon-col"><span class="row-checkbox"></span></td>
-            <td class="icon-col"><span class="info-icon">i</span></td>
-            <td class="icon-col"><span class="small-icon">☰</span></td>
-            <td class="icon-col"><span class="small-icon">🖼</span></td>
-            <td>Girokonto</td>
-            <td>19/05/2026</td>
-            <td>Hidden Categorie…</td>
-            <td><span class="category-cell">💡…</span></td>
-            <td></td>
-            <td class="amount-out">€9.99</td>
-            <td class="amount-in"></td>
-            <td class="icon-col"><span class="cleared-dot"></span></td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </main>
+
+<!-- ── Bottom action bar ── -->
+<div class="action-bar">
+  <div class="action-bar-item close-btn">✕ 1 Transaction</div>
+  <div class="action-bar-item"><span class="ab-icon">✓</span> Approve</div>
+  <div class="action-bar-item"><span class="ab-icon">✕</span> Reject</div>
+  <div class="action-bar-item"><span class="ab-icon">⊟</span> Categorize</div>
+  <div class="action-bar-item"><span class="ab-icon">…</span> More</div>
+</div>
 
 <!-- ── Modal ── -->
 <div class="modal-overlay" id="modal">
@@ -836,7 +812,7 @@
   </div>
 </div>
 
-<div class="toast" id="toast">✓ 5 Amazon orders matched and enriched</div>
+<div class="toast" id="toast">✓ 7 Amazon orders matched and enriched</div>
 
 <script>
   function showStep(id) {
